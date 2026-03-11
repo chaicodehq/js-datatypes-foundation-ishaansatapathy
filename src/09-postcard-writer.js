@@ -52,21 +52,29 @@
  *   countVowels("Namaste")     // => 3
  */
 export function writePostcard(sender, receiver, message) {
-  // Your code here
+  if ([sender, receiver, message].some(x => typeof x !== 'string' || x.trim() === '')) return '';
+  return `Priy ${receiver},\n\n${message}\n\nAapka/Aapki,\n${sender}`;
 }
 
 export function isValidPincode(code) {
-  // Your code here
+  if (typeof code !== 'string') return false;
+  if (code.length !== 6 || code.startsWith('0')) return false;
+  return /^\d{6}$/.test(code);
 }
 
 export function formatPostcardField(label, value, width) {
-  // Your code here
+  if (typeof label !== 'string' || typeof value !== 'string') return '';
+  const w = typeof width === 'number' ? width : 12;
+  return label.padEnd(w) + ': ' + value;
 }
 
 export function isFromState(address, stateCode) {
-  // Your code here
+  if (typeof address !== 'string' || typeof stateCode !== 'string') return false;
+  return address.endsWith(stateCode);
 }
 
 export function countVowels(message) {
-  // Your code here
+  if (typeof message !== 'string') return 0;
+  const m = message.match(/[aeiouAEIOU]/g);
+  return m ? m.length : 0;
 }

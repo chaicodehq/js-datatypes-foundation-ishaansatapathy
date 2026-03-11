@@ -53,17 +53,46 @@
  *   // => "RAJASTHANI THALI (Veg) - Items: dal - Rs.250.00"
  */
 export function createThaliDescription(thali) {
-  // Your code here
+  if (!thali || typeof thali !== 'object' || typeof thali.name !== 'string' || !Array.isArray(thali.items) || typeof thali.price !== 'number' || typeof thali.isVeg !== 'boolean') return '';
+  const name = thali.name.toUpperCase();
+  const veg = thali.isVeg ? 'Veg' : 'Non-Veg';
+  const items = thali.items.join(', ');
+  const price = thali.price.toFixed(2);
+  return `${name} (${veg}) - Items: ${items} - Rs.${price}`;
 }
 
 export function getThaliStats(thalis) {
-  // Your code here
+  if (!Array.isArray(thalis) || thalis.length === 0) return null;
+  const vegCount = thalis.filter(t => t.isVeg).length;
+  const nonVegCount = thalis.filter(t => !t.isVeg).length;
+  const avgPrice = (thalis.reduce((sum, t) => sum + t.price, 0) / thalis.length).toFixed(2);
+  const cheapest = Math.min(...thalis.map(t => t.price));
+  const costliest = Math.max(...thalis.map(t => t.price));
+  const names = thalis.map(t => t.name);
+  return {
+    totalThalis: thalis.length,
+    vegCount,
+    nonVegCount,
+    avgPrice,
+    cheapest,
+    costliest,
+    names
+  };
 }
 
 export function searchThaliMenu(thalis, query) {
-  // Your code here
+  if (!Array.isArray(thalis) || typeof query !== 'string') return [];
+  const q = query.toLowerCase();
+  return thalis.filter(t =>
+    (t.name && t.name.toLowerCase().includes(q)) ||
+    (Array.isArray(t.items) && t.items.some(item => item.toLowerCase().includes(q)))
+  );
 }
 
 export function generateThaliReceipt(customerName, thalis) {
-  // Your code here
+  if (typeof customerName !== 'string' || !Array.isArray(thalis) || thalis.length === 0) return '';
+  const name = customerName.toUpperCase();
+  const lines = thalis.map(t => `- ${t.name} x Rs.${t.price}`);
+  const total = thalis.reduce((sum, t) => sum + t.price, 0);
+  return `THALI RECEIPT\n---\nCustomer: ${name}\n${lines.join('\n')}\n---\nTotal: Rs.${total}\nItems: ${thalis.length}`;
 }
